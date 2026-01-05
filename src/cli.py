@@ -1,7 +1,15 @@
-from cleaner import clean_data
 import argparse
 import os
+"""
+Estos los tengo aquí para recordar que antes de crear el paquete _init_.py, llamaba los módulos así:
 from loader import load_csv
+from cleaner import clean_data
+"""
+from src.cleaner import clean_data
+from src.loader import load_csv
+
+
+
 
 
 
