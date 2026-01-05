@@ -1,6 +1,8 @@
+from cleaner import clean_data
 import argparse
 import os
 from loader import load_csv
+
 
 
 def main():
@@ -42,6 +44,15 @@ def main():
 
     duplicate_rows = df.duplicated().sum()
     print(f"Duplicate rows: {duplicate_rows}")
+
+    #Clean data
+    print("\n🧹 Cleaning data...")
+
+    cleaned_df = clean_data(df)
+
+    print("✅ Data cleaned")
+    print(f"Rows after cleaning: {cleaned_df.shape[0]}")
+
 
 
 
