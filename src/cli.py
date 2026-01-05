@@ -25,11 +25,24 @@ def main():
 
     df = load_csv(input_path)
 
+    #Basic info
     print("✅ File loaded successfully")
     print(f"Rows: {df.shape[0]}")
     print(f"Columns: {df.shape[1]}")
     print("\nPreview:")
     print(df.head())
+
+    #Quality data
+    print("\n📊 Data Quality Report")
+
+    null_counts = df.isnull().sum()
+    total_nulls = null_counts.sum()
+
+    print(f"Total missing values: {total_nulls}")
+
+    duplicate_rows = df.duplicated().sum()
+    print(f"Duplicate rows: {duplicate_rows}")
+
 
 
 if __name__ == "__main__":
