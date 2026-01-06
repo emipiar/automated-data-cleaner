@@ -5,12 +5,9 @@ Estos los tengo aquí para recordar que antes de crear el paquete _init_.py, lla
 from loader import load_csv
 from cleaner import clean_data
 """
+from src.database import save_to_sqlite
 from src.cleaner import clean_data
 from src.loader import load_csv
-
-
-
-
 
 
 def main():
@@ -61,6 +58,9 @@ def main():
     print("✅ Data cleaned")
     print(f"Rows after cleaning: {cleaned_df.shape[0]}")
 
+    #BD
+    save_to_sqlite(cleaned_df)
+    print("Data saved to SQLite database successfully")
 
 
 
