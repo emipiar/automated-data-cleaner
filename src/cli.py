@@ -5,6 +5,7 @@ Estos los tengo aquí para recordar que antes de crear el paquete _init_.py, lla
 from loader import load_csv
 from cleaner import clean_data
 """
+from src.report import generate_report, save_report
 from src.database import save_to_sqlite
 from src.cleaner import clean_data
 from src.loader import load_csv
@@ -61,6 +62,12 @@ def main():
     #BD
     save_to_sqlite(cleaned_df)
     print("Data saved to SQLite database successfully")
+
+    #Report
+    report = generate_report()
+    save_report(report)
+    print("Report generated successfully")
+
 
 
 
