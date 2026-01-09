@@ -8,6 +8,9 @@ from src.report import generate_report, save_report
 
 
 def main():
+    setup_logger()
+    logging.info("CLI started")
+
     # 1️⃣ Crear parser
     parser = argparse.ArgumentParser(
         description="Automated Data Cleaner CLI"
@@ -45,7 +48,7 @@ def main():
     if args.report_only:
         report = generate_report()
         save_report(report)
-        print("Report generated from existing database")
+        logging.info("Report generated from existing database")
         return
 
     if not args.input:
@@ -56,16 +59,13 @@ def main():
 
     if not args.no_db:
         save_to_sqlite(cleaned_df)
-        print("Data saved to SQLite database")
+        logging.info("Data saved to SQLite database")
 
     if not args.no_report:
         report = generate_report()
         save_report(report)
-        print("Report generated successfully")
-    
-    print("Processing completed successfully")
+        logging.info("Report generated successfully")
 
-
-
+    logging.info("Processing completed successfully")
 if __name__ == "__main__":
     main()
