@@ -1,73 +1,69 @@
 import argparse
-import os
-"""
-Estos los tengo aquí para recordar que antes de crear el paquete _init_.py, llamaba los módulos así:
-from loader import load_csv
-from cleaner import clean_data
-"""
-from src.report import generate_report, save_report
-from src.database import save_to_sqlite
-from src.cleaner import clean_data
+import logging
 from src.loader import load_csv
+from src.cleaner import clean_data
+from src.logger import setup_logger
+from src.database import save_to_sqlite
+from src.report import generate_report, save_report
 
 
 def main():
+    # 1️⃣ Crear parser
     parser = argparse.ArgumentParser(
-        description="CLI tool to analyze and clean CSV files"
+        description="Automated Data Cleaner CLI"
+    )
+
+    # 2️⃣ Argumentos (AQUÍ VAN LOS FLAGS)
+    parser.add_argument(
+        "--input",
+        required=False,
+        help="Path to input CSV file"
     )
 
     parser.add_argument(
-        "--input",
-        required=True,
-        help="Path to the input CSV file"
+        "--no-db",
+        action="store_true",
+        help="Skip saving cleaned data to SQLite"
     )
 
-    args = parser.parse_args()
-    input_path = args.input
+    parser.add_argument(
+        "--no-report",
+        action="store_true",
+        help="Skip report generation"
+    )
 
-    if not os.path.exists(input_path):
-        print(f"❌ File not found: {input_path}")
+    parser.add_argument(
+        "--report-only",
+        action="store_true",
+        help="Generate report using existing database"
+    )
+
+    # 3️⃣ Parsear argumentos
+    args = parser.parse_args()
+
+    # 4️⃣ LÓGICA DEL PROGRAMA (NO ES ARGPARSE)
+    if args.report_only:
+        report = generate_report()
+        save_report(report)
+        print("Report generated from existing database")
         return
 
-    print(f"📂 Loading file: {input_path}")
+    if not args.input:
+        raise ValueError("Input CSV file is required unless --report-only is used")
 
-    df = load_csv(input_path)
-
-    #Basic info
-    print("✅ File loaded successfully")
-    print(f"Rows: {df.shape[0]}")
-    print(f"Columns: {df.shape[1]}")
-    print("\nPreview:")
-    print(df.head())
-
-    #Quality data
-    print("\n📊 Data Quality Report")
-
-    null_counts = df.isnull().sum()
-    total_nulls = null_counts.sum()
-
-    print(f"Total missing values: {total_nulls}")
-
-    duplicate_rows = df.duplicated().sum()
-    print(f"Duplicate rows: {duplicate_rows}")
-
-    #Clean data
-    print("\n🧹 Cleaning data...")
-
+    df = load_csv(args.input)
     cleaned_df = clean_data(df)
 
-    print("✅ Data cleaned")
-    print(f"Rows after cleaning: {cleaned_df.shape[0]}")
+    if not args.no_db:
+        save_to_sqlite(cleaned_df)
+        print("Data saved to SQLite database")
 
-    #BD
-    save_to_sqlite(cleaned_df)
-    print("Data saved to SQLite database successfully")
-
-    #Report
-    report = generate_report()
-    save_report(report)
-    print("Report generated successfully")
-
+    if not args.no_report:
+        report = generate_report()
+        save_report(report)
+        print("Report generated successfully")
+    
+    print("Processing completed successfully")
 
 
 
