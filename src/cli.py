@@ -11,61 +11,54 @@ def main():
     setup_logger()
     logging.info("CLI started")
 
-    # 1️⃣ Crear parser
     parser = argparse.ArgumentParser(
         description="Automated Data Cleaner CLI"
     )
 
-    # 2️⃣ Argumentos (AQUÍ VAN LOS FLAGS)
-    parser.add_argument(
-        "--input",
-        required=False,
-        help="Path to input CSV file"
-    )
+    parser.add_argument("--input", help="Path to input CSV file")
+    parser.add_argument("--no-clean", action="store_true", help="Skip data cleaning")
+    parser.add_argument("--no-db", action="store_true", help="Skip saving cleaned data to SQLite")
+    parser.add_argument("--no-report", action="store_true", help="Skip report generation")
+    parser.add_argument("--report-only", action="store_true", help="Generate report using existing database")
 
-    parser.add_argument(
-        "--no-db",
-        action="store_true",
-        help="Skip saving cleaned data to SQLite"
-    )
-
-    parser.add_argument(
-        "--no-report",
-        action="store_true",
-        help="Skip report generation"
-    )
-
-    parser.add_argument(
-        "--report-only",
-        action="store_true",
-        help="Generate report using existing database"
-    )
-
-    # 3️⃣ Parsear argumentos
     args = parser.parse_args()
 
-    # 4️⃣ LÓGICA DEL PROGRAMA (NO ES ARGPARSE)
+    # 🔹 Report-only mode
     if args.report_only:
-        report = generate_report()
+        logging.info("Generating report from existing database")
+        report = generate_report(from_db=True)
         save_report(report)
-        logging.info("Report generated from existing database")
+        logging.info("Report generated from database")
         return
 
+    # 🔹 Normal flow requires input
     if not args.input:
-        raise ValueError("Input CSV file is required unless --report-only is used")
+        logging.error("Input CSV file is required unless --report-only is used")
+        return
 
     df = load_csv(args.input)
-    cleaned_df = clean_data(df)
+    logging.info(f"CSV loaded from {args.input}")
+
+    if not args.no_clean:
+        df = clean_data(df)
+        logging.info("Data cleaning applied")
+    else:
+        logging.info("Data cleaning skipped")
 
     if not args.no_db:
-        save_to_sqlite(cleaned_df)
+        save_to_sqlite(df)
         logging.info("Data saved to SQLite database")
+    else:
+        logging.info("Database export skipped")
 
     if not args.no_report:
-        report = generate_report()
+        report = generate_report(df=df)
         save_report(report)
         logging.info("Report generated successfully")
+    else:
+        logging.info("Report generation skipped")
 
+    
     logging.info("Processing completed successfully")
 if __name__ == "__main__":
     main()

@@ -1,8 +1,10 @@
 import sqlite3
+import logging
 from src.database import get_connection
 
 
 def generate_report(table_name="clean_data"):
+    logging.info(f"Generating report for table: {table_name}")
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -26,5 +28,7 @@ Total columns: {total_columns}
 
 
 def save_report(report, path="reports/summary.txt"):
+    logging.info(f"Saving report to {path}")
     with open(path, "w") as f:
         f.write(report)
+    logging.info("Report saved successfully")

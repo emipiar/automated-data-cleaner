@@ -1,7 +1,9 @@
 import pandas as pd
+import logging
 
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
+    logging.info("Starting data cleaning process") #less is more! en este punto solo logueamos el inicio del proceso
     """
     Cleans the DataFrame by:
     - removing duplicate rows
