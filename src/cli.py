@@ -26,7 +26,7 @@ def main():
     # 🔹 Report-only mode
     if args.report_only:
         logging.info("Generating report from existing database")
-        report = generate_report(from_db=True)
+        report = generate_report()
         save_report(report)
         logging.info("Report generated from database")
         return
@@ -52,7 +52,7 @@ def main():
         logging.info("Database export skipped")
 
     if not args.no_report:
-        report = generate_report(df=df)
+        report = generate_report()
         save_report(report)
         logging.info("Report generated successfully")
     else:
