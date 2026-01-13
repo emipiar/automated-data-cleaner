@@ -22,22 +22,39 @@ This project was built with **modularity, clarity, and best practices** in mind,
 ## 📁 Project Structure
 
 automated-data-cleaner/
+
 │
+
 ├── src/
+
 │   ├── cli.py          # Command-line interface
+
 │   ├── loader.py       # CSV loading logic
+
 │   ├── cleaner.py      # Data cleaning logic
+
 │   ├── database.py     # SQLite database handling
+
 │   ├── report.py       # Report generation
+
 │   ├── logger.py       # Logging configuration
+
 │
+
 ├── data/
+
 │   ├── raw/            # Raw input CSV files
+
 │   └── processed/      # Generated SQLite database
+
 │
+
 ├── reports/            # Generated reports
+
 ├── tests/              # Unit tests
+
 ├── pytest.ini
+
 └── README.md
 
 ---
