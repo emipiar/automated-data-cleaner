@@ -23,3 +23,23 @@ Crea la carpeta si no existe
 Crea la base de datos automáticamente
 Guarda el DataFrame como tabla SQL
 """
+def save_metadata(metadata, table_name="metadata"):
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(f"""
+        CREATE TABLE IF NOT EXISTS {table_name} (
+            key TEXT PRIMARY KEY,
+            value TEXT
+        )
+    """)
+
+    for key, value in metadata.items():
+        cursor.execute(
+            f"INSERT OR REPLACE INTO {table_name} (key, value) VALUES (?, ?)",
+            (key, str(value))
+        )
+
+    conn.commit()
+    conn.close()
+    logging.info("Metadata saved successfully")
