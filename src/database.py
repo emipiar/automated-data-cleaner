@@ -2,7 +2,7 @@ import sqlite3
 import logging
 import os
 
-DB_PATH = "data/processed/clean_data.db"
+from src.config import DB_PATH, CLEAN_TABLE, METADATA_TABLE
 
 
 def get_connection():
@@ -10,10 +10,10 @@ def get_connection():
     return sqlite3.connect(DB_PATH)
 
 
-def save_to_sqlite(df, table_name="clean_data"):
+def save_to_sqlite(df, table_name=CLEAN_TABLE):
     logging.info(f"Saving DataFrame to SQLite database at {DB_PATH}, table: {table_name}")
     conn = get_connection()
-    df.to_sql(table_name, conn, if_exists="replace", index=False)
+    df.to_sql(CLEAN_TABLE, conn, if_exists="replace", index=False)
     conn.close()
     logging.info("DataFrame saved successfully")
 """
